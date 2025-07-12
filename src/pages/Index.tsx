@@ -5,8 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Shield, ShieldAlert, Search, Globe, BarChart3, AlertTriangle, CheckCircle, Info, Zap, Lock, Eye, Mail, QrCode, Users, Upload, FileImage, AlertCircle } from "lucide-react";
+import { Shield, ShieldAlert, Search, Globe, BarChart3, AlertTriangle, CheckCircle, Info, Zap, Lock, Eye } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const Index = () => {
@@ -17,21 +16,6 @@ const Index = () => {
     confidence: number;
     features: any;
   } | null>(null);
-
-  // Email analyzer state
-  const [emailContent, setEmailContent] = useState("");
-  const [isAnalyzingEmail, setIsAnalyzingEmail] = useState(false);
-  const [emailResult, setEmailResult] = useState<any>(null);
-
-  // QR scanner state
-  const [qrFile, setQrFile] = useState<File | null>(null);
-  const [isAnalyzingQr, setIsAnalyzingQr] = useState(false);
-  const [qrResult, setQrResult] = useState<any>(null);
-
-  // Domain impersonation state
-  const [domain, setDomain] = useState("");
-  const [isAnalyzingDomain, setIsAnalyzingDomain] = useState(false);
-  const [domainResult, setDomainResult] = useState<any>(null);
 
   const analyzeUrl = async () => {
     if (!url) {
@@ -44,13 +28,6 @@ const Index = () => {
     }
 
     setIsAnalyzing(true);
-    
-    // TODO: Replace with actual API call to your Flask backend
-    // const response = await fetch('/api/analyze-url', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ url })
-    // });
     
     // Simulate ML analysis
     setTimeout(() => {
@@ -69,115 +46,6 @@ const Index = () => {
         }
       });
       setIsAnalyzing(false);
-    }, 2000);
-  };
-
-  const analyzeEmail = async () => {
-    if (!emailContent.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter email content to analyze",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsAnalyzingEmail(true);
-    
-    // TODO: Replace with actual API call to your Flask backend
-    // const response = await fetch('/api/email-analyze', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email_content: emailContent })
-    // });
-    
-    // Simulate email analysis
-    setTimeout(() => {
-      const riskScore = Math.random() * 100;
-      const isPhishing = riskScore > 65;
-      
-      setEmailResult({
-        isPhishing,
-        riskScore: Math.round(riskScore),
-        threatTags: isPhishing ? ['urgent-language', 'suspicious-links', 'fake-sender'] : ['legitimate'],
-        recommendation: isPhishing ? 'Do not click any links or attachments' : 'Email appears safe'
-      });
-      setIsAnalyzingEmail(false);
-    }, 2500);
-  };
-
-  const analyzeQrCode = async () => {
-    if (!qrFile) {
-      toast({
-        title: "Error",
-        description: "Please upload a QR code image",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsAnalyzingQr(true);
-    
-    // TODO: Replace with actual API call to your Flask backend
-    // const formData = new FormData();
-    // formData.append('qr_image', qrFile);
-    // const response = await fetch('/api/scan-qr', {
-    //   method: 'POST',
-    //   body: formData
-    // });
-    
-    // Simulate QR analysis
-    setTimeout(() => {
-      const isMalicious = Math.random() > 0.7;
-      const extractedUrl = "https://example.com/fake-url";
-      
-      setQrResult({
-        isMalicious,
-        extractedContent: extractedUrl,
-        contentType: 'URL',
-        riskScore: Math.round(Math.random() * 100),
-        recommendation: isMalicious ? 'Do not visit this URL' : 'QR code appears safe'
-      });
-      setIsAnalyzingQr(false);
-    }, 3000);
-  };
-
-  const analyzeDomain = async () => {
-    if (!domain.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter a domain to analyze",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsAnalyzingDomain(true);
-    
-    // TODO: Replace with actual API call to your Flask backend
-    // const response = await fetch('/api/check-domain', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ domain })
-    // });
-    
-    // Simulate domain analysis
-    setTimeout(() => {
-      const isImpersonating = Math.random() > 0.6;
-      const suspiciousFeatures = [];
-      
-      if (isImpersonating) {
-        suspiciousFeatures.push('Similar to known brand', 'Suspicious TLD', 'Typosquatting');
-      }
-      
-      setDomainResult({
-        isImpersonating,
-        suspiciousFeatures,
-        legitimateDomain: isImpersonating ? 'google.com' : null,
-        riskScore: Math.round(Math.random() * 100),
-        recommendation: isImpersonating ? 'Possible domain impersonation detected' : 'Domain appears legitimate'
-      });
-      setIsAnalyzingDomain(false);
     }, 2000);
   };
 
@@ -280,197 +148,6 @@ const Index = () => {
                           <span>Subdomains: {result.features.subdomains}</span>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </Alert>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Additional Security Modules */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-16">
-          {/* Email Analyzer */}
-          <Card className="shadow-lg border-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Mail className="h-5 w-5" />
-                Email Analyzer
-              </CardTitle>
-              <CardDescription>
-                Analyze email content for phishing characteristics
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Textarea
-                placeholder="Paste email content here..."
-                value={emailContent}
-                onChange={(e) => setEmailContent(e.target.value)}
-                className="min-h-[100px]"
-              />
-              <Button 
-                onClick={analyzeEmail} 
-                disabled={isAnalyzingEmail}
-                className="w-full"
-              >
-                {isAnalyzingEmail ? (
-                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent" />
-                ) : (
-                  "Analyze Email"
-                )}
-              </Button>
-              
-              {emailResult && (
-                <Alert className={`border-2 ${emailResult.isPhishing ? 'border-destructive bg-destructive/10' : 'border-green-500 bg-green-50 dark:bg-green-950'}`}>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      {emailResult.isPhishing ? (
-                        <AlertTriangle className="h-4 w-4 text-destructive" />
-                      ) : (
-                        <CheckCircle className="h-4 w-4 text-green-600" />
-                      )}
-                      <AlertDescription className="font-medium">
-                        Risk Score: {emailResult.riskScore}%
-                      </AlertDescription>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex flex-wrap gap-1">
-                        {emailResult.threatTags.map((tag: string, idx: number) => (
-                          <Badge key={idx} variant={emailResult.isPhishing ? "destructive" : "default"} className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                      <p className="text-sm text-muted-foreground">{emailResult.recommendation}</p>
-                    </div>
-                  </div>
-                </Alert>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* QR Code Scanner */}
-          <Card className="shadow-lg border-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <QrCode className="h-5 w-5" />
-                QR Code Scanner
-              </CardTitle>
-              <CardDescription>
-                Upload and analyze QR codes for malicious content
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="border-2 border-dashed border-border rounded-lg p-6 text-center">
-                <FileImage className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => setQrFile(e.target.files?.[0] || null)}
-                  className="mb-2"
-                />
-                <p className="text-sm text-muted-foreground">
-                  {qrFile ? qrFile.name : "Select QR code image"}
-                </p>
-              </div>
-              <Button 
-                onClick={analyzeQrCode} 
-                disabled={isAnalyzingQr}
-                className="w-full"
-              >
-                {isAnalyzingQr ? (
-                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent" />
-                ) : (
-                  "Scan QR Code"
-                )}
-              </Button>
-              
-              {qrResult && (
-                <Alert className={`border-2 ${qrResult.isMalicious ? 'border-destructive bg-destructive/10' : 'border-green-500 bg-green-50 dark:bg-green-950'}`}>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      {qrResult.isMalicious ? (
-                        <AlertCircle className="h-4 w-4 text-destructive" />
-                      ) : (
-                        <CheckCircle className="h-4 w-4 text-green-600" />
-                      )}
-                      <AlertDescription className="font-medium">
-                        {qrResult.isMalicious ? "⚠️ Malicious Content Detected" : "✅ QR Code Appears Safe"}
-                      </AlertDescription>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-sm"><strong>Content:</strong> {qrResult.extractedContent}</p>
-                      <p className="text-sm"><strong>Type:</strong> {qrResult.contentType}</p>
-                      <Badge variant={qrResult.isMalicious ? "destructive" : "default"}>
-                        Risk: {qrResult.riskScore}%
-                      </Badge>
-                      <p className="text-sm text-muted-foreground">{qrResult.recommendation}</p>
-                    </div>
-                  </div>
-                </Alert>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Domain Impersonation Detector */}
-          <Card className="shadow-lg border-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                Domain Impersonation
-              </CardTitle>
-              <CardDescription>
-                Check if domain is impersonating known brands
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Input
-                placeholder="example.com"
-                value={domain}
-                onChange={(e) => setDomain(e.target.value)}
-              />
-              <Button 
-                onClick={analyzeDomain} 
-                disabled={isAnalyzingDomain}
-                className="w-full"
-              >
-                {isAnalyzingDomain ? (
-                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent" />
-                ) : (
-                  "Check Domain"
-                )}
-              </Button>
-              
-              {domainResult && (
-                <Alert className={`border-2 ${domainResult.isImpersonating ? 'border-destructive bg-destructive/10' : 'border-green-500 bg-green-50 dark:bg-green-950'}`}>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      {domainResult.isImpersonating ? (
-                        <AlertTriangle className="h-4 w-4 text-destructive" />
-                      ) : (
-                        <CheckCircle className="h-4 w-4 text-green-600" />
-                      )}
-                      <AlertDescription className="font-medium">
-                        {domainResult.isImpersonating ? "⚠️ Possible Impersonation" : "✅ Domain Appears Legitimate"}
-                      </AlertDescription>
-                    </div>
-                    <div className="space-y-1">
-                      <Badge variant={domainResult.isImpersonating ? "destructive" : "default"}>
-                        Risk: {domainResult.riskScore}%
-                      </Badge>
-                      {domainResult.legitimateDomain && (
-                        <p className="text-sm"><strong>Similar to:</strong> {domainResult.legitimateDomain}</p>
-                      )}
-                      {domainResult.suspiciousFeatures.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
-                          {domainResult.suspiciousFeatures.map((feature: string, idx: number) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
-                              {feature}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                      <p className="text-sm text-muted-foreground">{domainResult.recommendation}</p>
                     </div>
                   </div>
                 </Alert>
